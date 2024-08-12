@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from passlib.hash import sha256_crypt
 
 db = SQLAlchemy()
 
@@ -10,10 +11,12 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        # self.password_hash = generate_password_hash(password)
+        self.password_hash = sha256_crypt.hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        # return check_password_hash(self.password_hash, password)
+        return sha256_crypt.verify(password, self.password_hash)
 
 
 class Image(db.Model):
