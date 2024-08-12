@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Hosting Service</title>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+    <div id="upload-section">
+        <h2>Upload Image</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" multiple>
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+
+    <div id="links-section">
+        <h2>Generated Links</h2>
+        <div id="links">
+            {% for image in images %}
+                <p>URL: {{ url_for('uploaded_file', filename=image.filename, _external=True) }}</p>
+                <p>HTML: &lt;img src="{{ url_for('uploaded_file', filename=image.filename, _external=True) }}" alt="{{ image.filename }}"&gt;</p>
+                <p>Markdown: ![{{ image.filename }}]({{ url_for('uploaded_file', filename=image.filename, _external=True) }})</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
