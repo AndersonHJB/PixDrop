@@ -53,13 +53,18 @@ def upload_file():
     for file in files:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
             image = Image(filename=filename, user_id=session['user_id'])
             db.session.add(image)
             db.session.commit()
 
             url, html, markdown = generate_links(filename)
-            links.append((url, html, markdown))
+            links.append({
+                'url': url,
+                'html': html,
+                'markdown': markdown
+            })
             copy_to_clipboard(markdown)
 
     return render_template('index.html', links=links)
